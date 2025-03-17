@@ -199,9 +199,17 @@ export class LoginComponent {
         this.ssoProviders.set(providers);
         
         // Ensure response.sso is an object with string keys and string values
-        const ssoUrls = typeof response.sso === 'object' && response.sso !== null 
-          ? response.sso as {[key: string]: string}
-          : {};
+        let ssoUrls: {[key: string]: string} = {};
+        if (response.sso && typeof response.sso === 'object') {
+          // Convert to the expected type regardless of actual shape
+          if (Array.isArray(response.sso)) {
+            // Handle array case by creating an empty object (we can't use array as URL map)
+            ssoUrls = {};
+          } else {
+            // It's a proper object
+            ssoUrls = response.sso as unknown as {[key: string]: string};
+          }
+        }
         this.ssoAuthUrls.set(ssoUrls);
       }
     });
