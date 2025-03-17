@@ -59,10 +59,10 @@
                 <span>OR</span>
               </div>
               <div class="sso-buttons">
-                @for (provider of ssoProviders(); track provider.id) {
+                @for (provider of ssoProviders(); track provider) {
                   <a mat-flat-button 
                      class="sso-button" 
-                     [href]="ssoAuthUrls()[provider.id]"
+                     [href]="ssoAuthUrls()[provider.id || '']"
                      color="primary">
                     Sign in with {{ provider.name }}
                   </a>

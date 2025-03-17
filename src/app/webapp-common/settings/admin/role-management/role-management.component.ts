@@ -11,7 +11,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { Role } from '~/business-logic/model/auth/role';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@common/shared/ui-components/overlay/confirm-dialog/confirm-dialog.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiAuthService } from '~/business-logic/api-services/auth.service';
 
@@ -34,7 +34,8 @@ interface UserRow {
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    FormsModule
   ],
   template: `
     <div class="role-management-container">

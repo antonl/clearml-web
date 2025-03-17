@@ -88,8 +88,8 @@ export class LoginComponent {
   touLink = computed(() => this.environment().legal.TOULink);
   protected notice = computed(() => this.environment().loginNotice);
   protected showGitHub = computed(() => !this.environment().enterpriseServer && !this.environment().communityServer);
-  protected ssoProviders = signal<Array<{id: string; name: string}>>([]);
-  protected ssoAuthUrls = signal<Record<string, string>>({});
+  protected ssoProviders = signal<Array<{id?: string; name: string; url?: string; display_name?: string; displayName?: string;}>>([]);
+  protected ssoAuthUrls = signal<{[key: string]: string}>({});
   private redirectUrl: string;
 
   private theme = this.store.selectSignal(selectUserTheme);
@@ -190,7 +190,16 @@ export class LoginComponent {
       catchError(() => EMPTY)
     ).subscribe(response => {
       if (response.sso_providers?.length > 0) {
-        this.ssoProviders.set(response.sso_providers);
+        // Map SSO providers to include id field if not already present
+        const providers = response.sso_providers.map((provider: any) => {
+          // Make sure each provider has an id field
+          if (!provider.id && provider.name) {
+            // Use name as fallback for id if not provided
+            return {...provider, id: provider.name.toLowerCase()};
+          }
+          return provider;
+        });
+        this.ssoProviders.set(providers);
         this.ssoAuthUrls.set(response.sso || {});
       }
     });
