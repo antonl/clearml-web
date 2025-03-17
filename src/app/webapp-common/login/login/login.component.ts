@@ -182,10 +182,7 @@ export class LoginComponent {
       });
       
     // Check for SSO providers
-    this.loginService.getLoginSupportedModes({
-      state: btoa(JSON.stringify({redirect: window.location.href})),
-      callback_url_prefix: window.location.origin
-    }).pipe(
+    this.loginService.getLoginSupportedModes().pipe(
       take(1),
       catchError(() => EMPTY)
     ).subscribe(response => {
@@ -200,7 +197,12 @@ export class LoginComponent {
           return provider;
         });
         this.ssoProviders.set(providers);
-        this.ssoAuthUrls.set(response.sso || {});
+        
+        // Ensure response.sso is an object with string keys and string values
+        const ssoUrls = typeof response.sso === 'object' && response.sso !== null 
+          ? response.sso as {[key: string]: string}
+          : {};
+        this.ssoAuthUrls.set(ssoUrls);
       }
     });
 
