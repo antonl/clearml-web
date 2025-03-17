@@ -88,6 +88,8 @@ export class LoginComponent {
   touLink = computed(() => this.environment().legal.TOULink);
   protected notice = computed(() => this.environment().loginNotice);
   protected showGitHub = computed(() => !this.environment().enterpriseServer && !this.environment().communityServer);
+  protected ssoProviders = signal<Array<{id: string; name: string}>>([]);
+  protected ssoAuthUrls = signal<Record<string, string>>({});
   private redirectUrl: string;
 
   private theme = this.store.selectSignal(selectUserTheme);
@@ -178,6 +180,20 @@ export class LoginComponent {
         }
         this.cdr.markForCheck();
       });
+      
+    // Check for SSO providers
+    this.loginService.getLoginSupportedModes({
+      state: btoa(JSON.stringify({redirect: window.location.href})),
+      callback_url_prefix: window.location.origin
+    }).pipe(
+      take(1),
+      catchError(() => EMPTY)
+    ).subscribe(response => {
+      if (response.sso_providers?.length > 0) {
+        this.ssoProviders.set(response.sso_providers);
+        this.ssoAuthUrls.set(response.sso || {});
+      }
+    });
 
     this.filteredOptions$ = this.loginForm.controls.name.valueChanges
       .pipe(

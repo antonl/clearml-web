@@ -6,6 +6,7 @@ import {WorkspaceConfigurationComponent} from '@common/settings/workspace-config
 import {SettingsComponent} from './settings.component';
 import {CrumbTypeEnum} from '@common/layout/breadcrumbs/breadcrumbs.component';
 import {StorageCredentialsComponent} from '@common/settings/storage-credentials/storage-credentials.component';
+import {RoleManagementComponent} from '@common/settings/admin/role-management/role-management.component';
 
 const settingsBreadcrumb = {
   name: 'Settings',
@@ -55,6 +56,18 @@ const routes: Routes = [
           route: '/settings/storage-credentials',
           staticBreadcrumb: [[settingsBreadcrumb, {
             name: 'Storage Credentials',
+            type: CrumbTypeEnum.SubFeature
+          }]]
+        }
+      },
+      {
+        path: 'role-management',
+        component: RoleManagementComponent,
+        data: {
+          workspaceNeutral: true,
+          route: '/settings/role-management',
+          staticBreadcrumb: [[settingsBreadcrumb, {
+            name: 'Role Management',
             type: CrumbTypeEnum.SubFeature
           }]]
         }

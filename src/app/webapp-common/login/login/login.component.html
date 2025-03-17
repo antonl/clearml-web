@@ -53,6 +53,23 @@
               {{ buttonCaption }}
             </button>
           }
+          @if (ssoProviders().length > 0) {
+            <div class="sso-options">
+              <div class="divider">
+                <span>OR</span>
+              </div>
+              <div class="sso-buttons">
+                @for (provider of ssoProviders(); track provider.id) {
+                  <a mat-flat-button 
+                     class="sso-button" 
+                     [href]="ssoAuthUrls()[provider.id]"
+                     color="primary">
+                    Sign in with {{ provider.name }}
+                  </a>
+                }
+              </div>
+            </div>
+          }
 
           <mat-autocomplete #auto="matAutocomplete">
             @for (option of filteredOptions$ | ngrxPush; track option.name) {
